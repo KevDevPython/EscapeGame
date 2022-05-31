@@ -7,7 +7,7 @@ import helpers
 
 
 class BaseCharacter:
-    def __init__(self, xa, ya, w, h, speed, sprite_sheet, facing):
+    def __init__(self, xa, ya, w, h, speed, sprite_sheet, facing=consts.SOUTH):
         self.xapx, self.yapx = helpers.a_to_apx(xa, ya)
         self.w, self.h = w, h
         self.speed = speed
@@ -64,7 +64,7 @@ class Player(BaseCharacter):
         pass
 
     def get_looking_at(self):
-        # TODO: get first interactable object in facing direction
+        # TODO: get first interactable object in facing direction and radius
         pass
 
     def key_up(self, key):

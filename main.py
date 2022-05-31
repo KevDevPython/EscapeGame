@@ -31,7 +31,6 @@ class Framework:
     def keyup(self, key):
         if key == pygame.K_ESCAPE:
             self.running = False
-        elif key == pygame.K_LEFT:
 
 
 if __name__ == "__main__":

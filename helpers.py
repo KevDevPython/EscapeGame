@@ -1,3 +1,5 @@
+import pygame
+
 import consts
 
 
@@ -19,3 +21,6 @@ def gen_frame_list(frame_cnt):
     frame_list += range(mid, 0, -1)
     frame_list += range(mid, frame_cnt + 1)
     return frame_list
+
+
+level = None

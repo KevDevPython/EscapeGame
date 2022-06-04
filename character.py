@@ -13,12 +13,16 @@ class BaseCharacter:
         self.frame_cnt = frame_cnt
         self.frame_list = list(map(helpers.gen_frame_list, frame_cnt))
         self.cur_frame = 0
+        self.tick = 0
         self.speed = speed
         self.is_walking = False
         self.facing = facing
         self.cbox = pygame.Rect(self.xapx, self.yapx, w, h)
         self.sprite_sheet = pygame.image.load(sprite_sheet).convert_alpha()
         self.sprite_sheet.set_colorkey((0, 255, 0))
+
+    def collide(self, level):
+        return False
 
     def draw(self, screen):
         frame = 0
@@ -27,22 +31,14 @@ class BaseCharacter:
         # TODO: translate coords
         screen.blit(self.sprite_sheet, (self.xapx, self.yapx),
                     (frame * self.w, self.facing * self.h, self.w, self.h))
-        self.cur_frame = (self.cur_frame + 1) % self.frame_cnt[self.facing]
+        self.tick = (self.tick + 1) % consts.FPS
+        if self.tick in range(0, 100, self.speed * 2):
+            self.cur_frame = (self.cur_frame + 1) % self.frame_cnt[self.facing]
 
     def move(self, facing):
-        if self.is_walking:
+        if self.is_walking and (not self.collide(helpers.level)):
             self.xapx += self.speed * consts.dx[facing]
             self.yapx += self.speed * consts.dy[facing]
-
-
-class Enemy(BaseCharacter):
-    def __init__(self, xa, ya, w, h, speed, sprite_sheet, frame_cnt, facing=consts.SOUTH):
-        super(Enemy, self).__init__(xa, ya, w, h, speed, sprite_sheet, frame_cnt, facing)
-
-    def move(self, facing):
-        if random.randint(0, 100) > 60:
-            self.is_walking = 1 - self.is_walking
-        super(Enemy, self).move(self.facing)
 
 
 class Player(BaseCharacter):
@@ -57,7 +53,9 @@ class Player(BaseCharacter):
             frame = self.frame_list[self.facing][self.cur_frame % self.frame_cnt[self.facing]]
         screen.blit(self.sprite_sheet, (self.xrpx, self.yrpx),
                     (frame * self.w, self.facing * self.h, self.w, self.h))
-        self.cur_frame = (self.cur_frame + 1) % self.frame_cnt[self.facing]
+        self.tick = (self.tick + 1) % consts.FPS
+        if self.tick in range(0, 100, self.speed * 2):
+            self.cur_frame = (self.cur_frame + 1) % self.frame_cnt[self.facing]
 
     def pick_up(self, item):
         # TODO: pick up item
@@ -84,4 +82,3 @@ class Player(BaseCharacter):
         elif key == pygame.K_d:
             self.is_walking = True
             self.facing = consts.EAST
-

@@ -17,7 +17,14 @@ class Framework:
         self.npc_list = npc_list
 
     def draw(self):
+        # TODO: blit background
+        # self.screen.blit(helpers.level, (player.xapx - consts.XRPX, player.yapx - consts.YRPX))
+        self.screen.fill((0, 0, 0))
         self.player.draw(self.screen)
+
+    def load_level(self, levelname):
+        # TODO: add collision rects
+        helpers.level = pygame.image.load(levelname).convert_alpha()
 
     def run(self):
         self.running = True

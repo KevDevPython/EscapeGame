@@ -7,31 +7,43 @@ import helpers
 
 
 class Framework:
-    def __init__(self, xa, ya, player_sprite_sheet, npc_sprite_sheet_list: list):
+    def __init__(self, xa, ya, player_sprite_sheet, npc_list):
         pygame.init()
         self.screen = pygame.display.set_mode((consts.WIDTH, consts.HEIGHT))
         self.clock = pygame.time.Clock()
         self.running = False
         self.player = character.Player(xa, ya, consts.CHARACTER_WIDTH, consts.CHARACTER_HEIGHT,
-                                       consts.CHARACTER_DEFAULT_SPEED, player_sprite_sheet)
-        self.npc_list = []
+                                       consts.CHARACTER_DEFAULT_SPEED, player_sprite_sheet, [5, 5, 7, 7])
+        self.npc_list = npc_list
 
-    def draw(self, screen):
-        pass
+    def draw(self):
+        self.player.draw(self.screen)
 
     def run(self):
         self.running = True
         while self.running:
-            self.draw(self.screen)
+            self.draw()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                elif event.type == pygame.KEYDOWN:
+                    self.keydown(event.key)
+                elif event.type == pygame.KEYUP:
+                    self.keyup(event.key)
             self.clock.tick(consts.FPS)
             pygame.display.update()
         pygame.quit()
         sys.exit()
 
-    def keyup(self, key):
+    def keydown(self, key):
         if key == pygame.K_ESCAPE:
             self.running = False
+        self.player.keydown(key)
+
+    def keyup(self, key):
+        self.player.keyup(key)
 
 
 if __name__ == "__main__":
-    pass
+    f = Framework(0, 0, "res/player_sprite_sheet.png", [])
+    f.run()
